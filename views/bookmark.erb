@@ -1,0 +1,25 @@
+<% entry = bookmark.entry %>
+<li class="bookmark-entry">
+  <img src="http://favicon.st-hatena.com/?url=<%= entry.url%>" alt=""/>
+  <h3 class="inline bookmark-title">
+    <a href="<%= entry.url %>" target="_blank"><%=h(entry.title || entry.url)%></a>
+  </h3>
+  <img src="http://b.hatena.ne.jp/entry/image/<%= entry.url %>">
+  <ul class="unstyled inline">
+    <% entry.bookmarks.limit(10).each do |b| %>
+    <% unless @user == b.user %>
+    <li class="user-list">
+      <img src="/img/anonymous_icon.jpg"
+           title="<%=h b.user.username %>">
+    </li>
+    <% end %>
+    <% end %>
+  </ul>
+  <form method="POST" action="/api/unbookmark" class="form-inline">
+    <input type="hidden"
+           name="bookmark_id"
+           value="<%=bookmark.id %>" />
+    <a class="bookmark-remove-btn"><i class="icon-remove"></i>削除</a>
+    <img src="/img/loading.gif" class="loading">
+  </form>
+</li>

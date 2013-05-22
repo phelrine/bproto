@@ -1,0 +1,27 @@
+#title {
+    display: inline;
+    float: left;
+}
+
+.loading {
+    display: none;
+}
+
+ul#navigation {
+    display: inline;
+    float: right;
+}
+
+ul#navigation li {
+    margin-top: 10px;
+    margin-left: 10px;
+    float: left;
+}
+
+ul.inline li.user-list {
+    padding: 1px;
+}
+
+.bookmark-title {
+    display: inline;
+}

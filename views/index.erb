@@ -1,0 +1,101 @@
+<% if login? %>
+<div class="row">
+  <h1 id="title">ブックマーク推薦(仮)</h1>
+  <ul id="navigation" class="unstyled">
+    <li>
+      <a href="#myModal" role="button" class="btn" data-toggle="modal">
+        <i class="icon-plus"> </i>ブックマークを追加
+      </a>
+
+    </li>
+    <li>
+      <form method="post" action="/logout" class="form-inline" id="logoutForm">
+        <a class="btn" id="logoutButton"><i class="icon-remove"></i>ログアウト</a>
+      </form>
+    </li>
+  </ul>
+  <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      <h3 id="myModalLabel">ブックマークを追加する</h3>
+    </div>
+    <div class="modal-body">
+      <form method="post" action="/auth/bookmark"
+            class="form-horizontal"
+            id="bookmarkForm">
+        <fieldset>
+          <label>
+            お気に入りのページをブックマーク
+          </label>
+          <input type="text" name="url" placeholder="URLを入力"></input>
+          <input type="submit" value="追加" class="btn" id="bookmarkAddBtn"/>
+          <img src="/img/loading.gif" class="loading" id="bookmarkLoading">
+        </fieldset>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="span12">
+    <ul class="nav nav-tabs" id="mainTab">
+      <li class="active">
+        <a href="#bookmarkTab"><i class="icon-star"></i>ブックマーク</a>
+      </li>
+      <li><a href="#userTab"><i class="icon-user"></i>ユーザー</a></li>
+    </ul>
+
+    <div class="tab-content">
+      <div class="tab-pane active" id="bookmarkTab">
+        <ul class="nav nav-pills" id="subTab">
+          <li class="active">
+            <a href="#bookmarkListPane">ブックマーク</a>
+          </li>
+          <li>
+            <a href="#friendListPane">友人のおすすめ</a>
+          </li>
+          <li>
+            <a href="#contentListPane">類似ユーザーのおすすめ</a>
+          </li>
+        </ul>
+        <hr />
+        <div class="tab-content">
+          <div class="tab-pane active" id="bookmarkListPane">
+            <ul id="bookmarkList">
+              <% Bookmark.where(user_id: @user).sort(updated_at: -1).each do |b| %>
+              <%= erb :bookmark, locals: {bookmark: b}%>
+              <% end %>
+            </ul>
+          </div>
+          <div class="tab-pane" id="friendListPane">
+            <% @user.friend_filtering.each do |e| %>
+            <%= erb :entry, locals: {entry: e} %>
+            <% end %>
+          </div>
+          <div class="tab-pane" id="contentListPane">
+            <% @user.collaborative_filtering.each do |e| %>
+            <%= erb :entry, locals: {entry: e} %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane" id="userTab">
+        <ul>
+          <% p @user.following %>
+          <% @user.following.each do |u| %>
+          <li><h3><%=h u.username %></h3></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<% else %>
+<h1>ログイン</h1>
+<form method="POST" action="/login">
+  <label>
+    Usernaem
+    <input type="text" width="80" name="username"></input>
+  </label>
+  <input type="submit" value="ログインする"></input>
+</form>
+<% end %>

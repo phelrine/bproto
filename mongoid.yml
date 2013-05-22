@@ -1,0 +1,6 @@
+development:
+  sessions:
+    default:
+      database: reco
+      hosts:
+        - localhost:27017
